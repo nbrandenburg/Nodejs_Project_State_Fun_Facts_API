@@ -12,7 +12,7 @@ const getAllStates = async (req, res) => {
     // Parse data
     const states = await JSON.parse(rawdata);
     
-    // Retrieve states from MongoDB
+/*     // Retrieve states from MongoDB
     const statesFunFacts = await State.find();
    
     if (!statesFunFacts) return res.status(204).json({ 'message': 'No states found.'});
@@ -23,7 +23,7 @@ const getAllStates = async (req, res) => {
             states[i].push(statesFunFacts[i].funfacts);
         }
     }
-
+ */
     // Set response
     res.json(states);
 }
@@ -42,7 +42,7 @@ const createNewState = async (req, res) => {
     const stateFunFacts = await State.findOne({ _state: req.code }).exec();
 
     try{
-        // If funfacts already exist, merge them with the new ones
+/*         // If funfacts already exist, merge them with the new ones
         const newFacts = req.body.funfacts;
 
         if (stateFunFacts) {
@@ -66,6 +66,12 @@ const createNewState = async (req, res) => {
             });
             res.status(201).json(result);
         }
+ */
+        const result = await State.create({
+            stateCode: req.code,
+            funfacts: req.body.funfacts
+        });
+        res.status(201).json(result);
     } catch (err) {
         console.error(err);
     }

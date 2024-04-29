@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const stateSchema = new Schema({
     stateCode: {
         type: String,
-        required: true,
-        unique: true
+        required: true
+        //unique: true
     },
     funfacts: {
         type: [String]

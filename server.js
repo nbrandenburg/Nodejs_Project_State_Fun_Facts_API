@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3500;
 connectDB();
 
 // Cross Origin Resource Sharing
-// enable CORS for all origins
+  // enable CORS for all origins
 app.use(cors());
 
 // built-in middleware to handle urlencoded form data
