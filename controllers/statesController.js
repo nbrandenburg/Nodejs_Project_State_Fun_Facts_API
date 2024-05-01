@@ -10,22 +10,38 @@ const getAllStates = async (req, res) => {
     // Retrieve data from the statesData.json file
     const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
 
-    // Parse data
-    const states = await JSON.parse(rawdata);
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
 
-    // Retrieve funfacts from database
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
 
-    // If statesFunFacts exist, merge them with the data from the file
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
+        }
+    });
     
-    res.json(states);
+    res.json(fileData);
 }
 
-// POST
+// POST use updateOne()
 const createNewState = async (req, res) => {
     // Make sure funfacts were provided
     if (!req?.body?.funfacts) {
-        return res.status(400).json({"message": "Fun facts required to create"});
+        return res.status(400).json({"message": "State fun facts value required"});
     }
+
+    verifyState(req, res);
 
     // Find state in database
     const state = await State.findOne({

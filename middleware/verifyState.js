@@ -20,10 +20,9 @@ const verifyState = async (req, res, next) => {
 
         // Search stateCodeArray for received state parameter
         let stateParam = req.params.state;
-        stateParam = stateParam.replace(":", "");
         stateParam = stateParam.toUpperCase();
 
-        const foundState = stateCodeArray.find((stateCode) => stateCode == stateParam);
+        const foundState = stateCodeArray.find((stateCode) => stateCode === stateParam);
         if (foundState) {
             // Attach the verified code to the request object
             req.code = foundState;
