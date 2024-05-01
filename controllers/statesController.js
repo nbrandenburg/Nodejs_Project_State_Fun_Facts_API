@@ -34,18 +34,16 @@ const getAllStates = async (req, res) => {
     res.json(fileData);
 }
 
-// POST use updateOne()
+// POST
 const createNewState = async (req, res) => {
     // Make sure funfacts were provided
     if (!req?.body?.funfacts) {
         return res.status(400).json({"message": "State fun facts value required"});
     }
 
-    verifyState(req, res);
-
     // Find state in database
     const state = await State.findOne({
-        stateCode: req.params.state
+        stateCode: req.params.state.toUpperCase()
     }).exec();
 
     try {
@@ -81,21 +79,17 @@ const updateState = async (req, res) => {
         return res.status(400).json({"message": "Fun facts and index required to update"});
     }
 
+    const index = req.body.index;
+
     // Find state in database
     const state = await State.findOne({
-        stateCode: req.params.state
+        stateCode: req.params.state.toUpperCase()
     }).exec();
 
     try {
 
         // Find the funfact to be updated using the index   
-        state.funfacts[index + 1] = req.body.funfacts;
-
-        // Save to database
-        const result = await State.update({
-            stateCode: req.params.state,
-            funfacts: state.funfacts
-        });
+        state.funfacts[index - 1] = req.body.funfacts;
 
         // Save to database
         result = await state.save();
@@ -108,26 +102,23 @@ const updateState = async (req, res) => {
 
 // DELETE
 const deleteState = async (req, res) => {
+
     // Make sure index was provided
     if (!req?.body?.index) {
         return res.status(400).json({"message": "Index required to delete"});
     }
 
+    const index = req.body.index;
+
     // Find state in database
     const state = await State.findOne({
-        stateCode: req.params.state
+        stateCode: req.params.state.toUpperCase()
     }).exec();
 
     try {
 
         // Find the funfact to be deleted using the index   
-        const deleted =  delete state.funfacts[index + 1];
-
-        // Save to database
-        const result = await State.update({
-            stateCode: req.params.state,
-            funfacts: state.funfacts
-        });
+        state.funfacts.splice((index - 1), 1);
 
         // Save to database
         result = await state.save();
@@ -143,30 +134,39 @@ const getState = async (req, res) => {
     // Make sure state is provided
     if (!req?.params?.state) return res.status(400).json({'message': 'State required.'});
 
-    // Verify state
-    verifyState();
-
     // Retrieve data from the statesData.json file
     const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-    const data = JSON.parse(rawdata);
-    const state = [];
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].code == req.code) {
-            state = data[i];
+
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
+
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
+
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
         }
-    }
-
-    // Retrieve state funfacts from database
-    const stateFunFacts = await State.findOne({ _state: req.params.state }).exec();
-    if(!stateFunFacts) {
-        return res.status(204).json({ 'message': `No state matches ${req.body.state}`});
-    }
-
-    // Merge data from file and database
-    state.push(stateFunFacts);
+    });
+    let result;
+    // Find Parameter State
+    fileData.forEach((fileState) => {
+        if (fileState.code === req.params.state.toUpperCase()) {
+            result = fileState;
+        }
+    })
 
     // Set response
-    res.json(state);
+    res.json(result);
 }
 
 module.exports = {
