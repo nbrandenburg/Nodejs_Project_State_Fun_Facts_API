@@ -30,6 +30,7 @@ const getAllStates = async (req, res) => {
             }
         }
     });
+    res.json(fileData);
 }
 
 // POST

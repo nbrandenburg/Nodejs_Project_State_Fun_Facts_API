@@ -3,7 +3,10 @@ const router = express.Router();
 const statesController = require('../../controllers/statesController');
 
 router.route('/')
-    .get(statesController.getAllStates)    
+    .get(statesController.getAllStates)
+    
+    router.route('/states')
+    .get(statesController.getAllStates)
 
     router.route('/:state/capital')
     .get(statesController.getStateCapital)
@@ -24,8 +27,6 @@ router.route('/')
         .get(statesController.getState)
         .post(statesController.createNewState)
         .patch(statesController.updateState)
-        .delete(statesController.deleteState)
-    
-     
+        .delete(statesController.deleteState)     
 
 module.exports = router;
