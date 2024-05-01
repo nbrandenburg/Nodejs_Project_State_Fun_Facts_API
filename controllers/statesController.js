@@ -50,7 +50,7 @@ const createNewState = async (req, res) => {
         // If the state doesn't exist in the DB, create it
         if (!state) {
             const result = await State.create({
-                stateCode: req.params.state,
+                stateCode: req.params.state.toUpperCase(),
                 funfacts: req.body.funfacts
             });
             res.status(201).json(result);
@@ -176,27 +176,9 @@ const getStateCapital = async (req, res) => {
 
     // Parse json data
     const fileData = await JSON.parse(rawdata);
-
-    // Retrieve data from MongoDB
-    const databaseData = await State.find();
-
-    // Match states in file with states in database
-    fileData.forEach((fileState) => {
-        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
-        
-        // If the state is in the database, store its funfacts in an array
-        if (databaseState) {
-            const factArray = databaseState.funfacts;
-
-            // Append funfacts to the rest of the state facts
-            if (factArray.length !== 0) {
-                fileState.funfacts = [...factArray];
-            }
-        }
-    });
     
-    let paramState;
     // Find Parameter State
+    let paramState;   
     fileData.forEach((fileState) => {
         if (fileState.code === req.params.state.toUpperCase()) {
             paramState = fileState;
@@ -222,23 +204,8 @@ const getStateNickname = async (req, res) => {
     // Retrieve data from MongoDB
     const databaseData = await State.find();
 
-    // Match states in file with states in database
-    fileData.forEach((fileState) => {
-        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
-        
-        // If the state is in the database, store its funfacts in an array
-        if (databaseState) {
-            const factArray = databaseState.funfacts;
-
-            // Append funfacts to the rest of the state facts
-            if (factArray.length !== 0) {
-                fileState.funfacts = [...factArray];
-            }
-        }
-    });
-    
-    let paramState;
     // Find Parameter State
+    let paramState;
     fileData.forEach((fileState) => {
         if (fileState.code === req.params.state.toUpperCase()) {
             paramState = fileState;
@@ -261,36 +228,21 @@ const getStatePopulation = async (req, res) => {
     // Parse json data
     const fileData = await JSON.parse(rawdata);
 
-    // Retrieve data from MongoDB
-    const databaseData = await State.find();
-
-    // Match states in file with states in database
-    fileData.forEach((fileState) => {
-        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
-        
-        // If the state is in the database, store its funfacts in an array
-        if (databaseState) {
-            const factArray = databaseState.funfacts;
-
-            // Append funfacts to the rest of the state facts
-            if (factArray.length !== 0) {
-                fileState.funfacts = [...factArray];
-            }
-        }
-    });
-    
-    let paramState;
     // Find Parameter State
+    let paramState;    
     fileData.forEach((fileState) => {
         if (fileState.code === req.params.state.toUpperCase()) {
             paramState = fileState;
         }
     });
 
+    // Format number
+    const population = new Intl.NumberFormat("en-US").format(paramState.population);
+
     // Create array with state name and population
     const populationArray = {
         state: paramState.state,
-        population: paramState.population
+        population: population
     }
     res.json(populationArray);
 }
@@ -303,26 +255,8 @@ const getStateAdmission = async (req, res) => {
     // Parse json data
     const fileData = await JSON.parse(rawdata);
 
-    // Retrieve data from MongoDB
-    const databaseData = await State.find();
-
-    // Match states in file with states in database
-    fileData.forEach((fileState) => {
-        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
-        
-        // If the state is in the database, store its funfacts in an array
-        if (databaseState) {
-            const factArray = databaseState.funfacts;
-
-            // Append funfacts to the rest of the state facts
-            if (factArray.length !== 0) {
-                fileState.funfacts = [...factArray];
-            }
-        }
-    });
-    
-    let paramState;
     // Find Parameter State
+    let paramState;    
     fileData.forEach((fileState) => {
         if (fileState.code === req.params.state.toUpperCase()) {
             paramState = fileState;
@@ -378,7 +312,6 @@ const getStateFunfact = async (req, res) => {
     }
     res.json(admissionArray);
 }
-
 
 module.exports = {
     getAllStates,
