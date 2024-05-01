@@ -6,7 +6,7 @@ const { verifyState } = require('../middleware/verifyState');
 
 // GET all
 const getAllStates = async (req, res) => {
-
+    
     // Retrieve data from the statesData.json file
     const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
 
@@ -30,8 +30,6 @@ const getAllStates = async (req, res) => {
             }
         }
     });
-    
-    res.json(fileData);
 }
 
 // POST
@@ -157,6 +155,7 @@ const getState = async (req, res) => {
             }
         }
     });
+
     let result;
     // Find Parameter State
     fileData.forEach((fileState) => {
@@ -169,10 +168,226 @@ const getState = async (req, res) => {
     res.json(result);
 }
 
+// Capital
+const getStateCapital = async (req, res) => {
+    // Retrieve data from the statesData.json file
+    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
+
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
+
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
+
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
+        }
+    });
+    
+    let paramState;
+    // Find Parameter State
+    fileData.forEach((fileState) => {
+        if (fileState.code === req.params.state.toUpperCase()) {
+            paramState = fileState;
+        }
+    });
+
+    // Create array with state name and capital
+    const capitalArray = {
+        state: paramState.state,
+        capital: paramState.capital_city
+    }
+    res.json(capitalArray);
+}
+
+// Nickname
+const getStateNickname = async (req, res) => {
+    // Retrieve data from the statesData.json file
+    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
+
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
+
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
+
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
+        }
+    });
+    
+    let paramState;
+    // Find Parameter State
+    fileData.forEach((fileState) => {
+        if (fileState.code === req.params.state.toUpperCase()) {
+            paramState = fileState;
+        }
+    });
+
+    // Create array with state name and nickname
+    const nicknameArray = {
+        state: paramState.state,
+        nickname: paramState.nickname
+    }
+    res.json(nicknameArray);
+}
+
+// Population
+const getStatePopulation = async (req, res) => {
+    // Retrieve data from the statesData.json file
+    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
+
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
+
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
+
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
+        }
+    });
+    
+    let paramState;
+    // Find Parameter State
+    fileData.forEach((fileState) => {
+        if (fileState.code === req.params.state.toUpperCase()) {
+            paramState = fileState;
+        }
+    });
+
+    // Create array with state name and population
+    const populationArray = {
+        state: paramState.state,
+        population: paramState.population
+    }
+    res.json(populationArray);
+}
+
+// Admission
+const getStateAdmission = async (req, res) => {
+    // Retrieve data from the statesData.json file
+    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
+
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
+
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
+
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
+        }
+    });
+    
+    let paramState;
+    // Find Parameter State
+    fileData.forEach((fileState) => {
+        if (fileState.code === req.params.state.toUpperCase()) {
+            paramState = fileState;
+        }
+    });
+
+    // Create array with state name and admission date
+    const admissionArray = {
+        state: paramState.state,
+        admitted: paramState.admission_date
+    }
+    res.json(admissionArray);
+}
+
+// Random Fun Fact
+const getStateFunfact = async (req, res) => {
+    // Retrieve data from the statesData.json file
+    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
+
+    // Parse json data
+    const fileData = await JSON.parse(rawdata);
+
+    // Retrieve data from MongoDB
+    const databaseData = await State.find();
+
+    // Match states in file with states in database
+    fileData.forEach((fileState) => {
+        const databaseState = databaseData.find((state) => state.stateCode == fileState.code);
+        
+        // If the state is in the database, store its funfacts in an array
+        if (databaseState) {
+            const factArray = databaseState.funfacts;
+
+            // Append funfacts to the rest of the state facts
+            if (factArray.length !== 0) {
+                fileState.funfacts = [...factArray];
+            }
+        }
+    });
+    
+    let paramState;
+    // Find Parameter State
+    fileData.forEach((fileState) => {
+        if (fileState.code === req.params.state.toUpperCase()) {
+            paramState = fileState;
+        }
+    });
+
+    // Create array with state name and random fun fact
+    const admissionArray = {
+        state: paramState.state,
+        funfact: paramState.admission
+    }
+    res.json(admissionArray);
+}
+
+
 module.exports = {
     getAllStates,
     createNewState,
     updateState,
     deleteState, 
-    getState
+    getState,
+    getStateCapital,
+    getStateNickname,
+    getStatePopulation,
+    getStateAdmission,
+    getStateFunfact
 }
