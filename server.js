@@ -36,6 +36,8 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 app.use('/', require('./routes/root'));
 app.use('/states', require('./routes/api/states'));
 
+
+// Catch all for routes that do not exist
 app.all('*', (req, res) => {
     res.status(404);
     if (req.accepts('html')) {
