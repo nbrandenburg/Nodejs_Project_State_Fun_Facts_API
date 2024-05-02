@@ -5,8 +5,8 @@ const statesController = require('../../controllers/statesController');
 router.route('/')
     .get(statesController.getAllStates)
     
-router.route('/states')
-    .get(statesController.getAllStates)
+    router.route('/states')
+        .get(statesController.getAllStates)
 
 router.route('/states/:state/capital')
     .get(statesController.getStateCapital)
