@@ -22,11 +22,11 @@ router.route('/')
 
     router.route('/:state/funfact')
     .get(statesController.getStateFunfact)
+    .post(statesController.createNewState)
+    .patch(statesController.updateState)
+    .delete(statesController.deleteState)
 
     router.route('/:state')
-        .get(statesController.getState)
-        .post(statesController.createNewState)
-        .patch(statesController.updateState)
-        .delete(statesController.deleteState)     
+        .get(statesController.getState)     
 
 module.exports = router;
