@@ -26,7 +26,7 @@ router.route('/states/:state/funfact')
     .patch(statesController.updateState)
     .delete(statesController.deleteState)
 
-router.route('/states/:state')
+router.route('/:state')
     .get(statesController.getState)     
 
 module.exports = router;
