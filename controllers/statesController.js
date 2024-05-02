@@ -1,18 +1,13 @@
 const State = require('../model/State');
 const fsPromises = require('fs').promises;
 const path = require('path');
+const fileData = require('../model/statesData.json');
 const { verifyState } = require('../middleware/verifyState');
 
 
 // GET all
 const getAllStates = async (req, res) => {
     
-    // Retrieve data from the statesData.json file
-    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-
-    // Parse json data
-    const fileData = await JSON.parse(rawdata);
-
     // Retrieve data from MongoDB
     const databaseData = await State.find();
 
@@ -196,13 +191,7 @@ const getState = async (req, res) => {
 }
 
 // Capital
-const getStateCapital = async (req, res) => {
-    // Retrieve data from the statesData.json file
-    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-
-    // Parse json data
-    const fileData = await JSON.parse(rawdata);
-    
+const getStateCapital = async (req, res) => {   
     // Find Parameter State
     let paramState;   
     fileData.forEach((fileState) => {
@@ -248,12 +237,6 @@ const getStateNickname = async (req, res) => {
 
 // Population
 const getStatePopulation = async (req, res) => {
-    // Retrieve data from the statesData.json file
-    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-
-    // Parse json data
-    const fileData = await JSON.parse(rawdata);
-
     // Find Parameter State
     let paramState;    
     fileData.forEach((fileState) => {
@@ -275,12 +258,6 @@ const getStatePopulation = async (req, res) => {
 
 // Admission
 const getStateAdmission = async (req, res) => {
-    // Retrieve data from the statesData.json file
-    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-
-    // Parse json data
-    const fileData = await JSON.parse(rawdata);
-
     // Find Parameter State
     let paramState;    
     fileData.forEach((fileState) => {
@@ -299,12 +276,6 @@ const getStateAdmission = async (req, res) => {
 
 // Random Fun Fact
 const getStateFunfact = async (req, res) => {
-    // Retrieve data from the statesData.json file
-    const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-
-    // Parse json data
-    const fileData = await JSON.parse(rawdata);
-
     // Retrieve data from MongoDB
     const databaseData = await State.find();
 
