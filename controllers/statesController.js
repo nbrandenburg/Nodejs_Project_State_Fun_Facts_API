@@ -30,7 +30,38 @@ const getAllStates = async (req, res) => {
             }
         }
     });
-    res.json(fileData);
+
+    // Check for contig query
+    if (req.query.contig) {
+        const contig = req.query.contig;
+
+        // If contig is true, return 48 contiguous states
+        if (contig) {
+            let contigStates = [];
+            fileData.forEach((state) => {
+                if (state.code != "AK" && state.code != "HI") {
+                    contigStates.push(state);
+                }
+            });
+            res.json(contigStates);
+        }
+
+        // If contig is false, return AK and HI
+        else {
+            let nonContigStates = [];
+            fileData.forEach((state) => {
+                if (state.code == "AK" || state.code == "HI") {
+                    nonContigStates.push(state);
+                }
+            });
+            res.json(nonContigStates);
+        }
+    }
+
+    // If contig query is not set, return all states
+    else {
+        res.json(fileData);
+    }    
 }
 
 // POST
