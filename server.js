@@ -7,13 +7,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const PORT = process.env.PORT || 3500;
 
-// allow options to pass preflight
-app.options("/*", (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    res.send(200);
-  });
+
 
 // Connect to MongoDB
 connectDB();
@@ -21,7 +15,13 @@ connectDB();
 // Cross Origin Resource Sharings
 app.use(cors());
 
-
+// allow options to pass preflight
+app.options("/*", (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.send(200);
+  });
 
 // built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
