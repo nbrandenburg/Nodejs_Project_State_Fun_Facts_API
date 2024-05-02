@@ -8,26 +8,25 @@ router.route('/')
     router.route('/states')
     .get(statesController.getAllStates)
 
+    router.route('/:state/capital')
+    .get(statesController.getStateCapital)
+    
+    router.route('/:state/nickname')
+    .get(statesController.getStateNickname)
+
+    router.route('/:state/population')
+    .get(statesController.getStatePopulation)
+
+    router.route('/:state/admission')
+    .get(statesController.getStateAdmission)
+
+    router.route('/:state/funfact')
+    .get(statesController.getStateFunfact)
+
     router.route('/:state')
         .get(statesController.getState)
         .post(statesController.createNewState)
         .patch(statesController.updateState)
-        .delete(statesController.deleteState) 
-        
-router.route('/:state/capital')
-.get(statesController.getStateCapital)
-
-router.route('/:state/nickname')
-.get(statesController.getStateNickname)
-
-router.route('/:state/population')
-.get(statesController.getStatePopulation)
-
-router.route('/:state/admission')
-.get(statesController.getStateAdmission)
-
-router.route('/:state/funfact')
-.get(statesController.getStateFunfact)
-    
+        .delete(statesController.deleteState)     
 
 module.exports = router;
