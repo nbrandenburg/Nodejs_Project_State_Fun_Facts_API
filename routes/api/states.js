@@ -8,6 +8,12 @@ router.route('/')
     router.route('/states')
         .get(statesController.getAllStates)
 
+        router.route('/:state/funfact')
+            .get(statesController.getStateFunfact)
+            .post(statesController.createNewState)
+            .patch(statesController.updateState)
+            .delete(statesController.deleteState)
+
 router.route('/states/:state/capital')
     .get(statesController.getStateCapital)
 
@@ -20,11 +26,7 @@ router.route('/states/:state/population')
 router.route('/states/:state/admission')
     .get(statesController.getStateAdmission)
 
-router.route('/states/:state/funfact')
-    .get(statesController.getStateFunfact)
-    .post(statesController.createNewState)
-    .patch(statesController.updateState)
-    .delete(statesController.deleteState)
+
 
 router.route('/:state')
     .get(statesController.getState)     
