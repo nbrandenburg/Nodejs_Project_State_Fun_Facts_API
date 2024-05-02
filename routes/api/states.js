@@ -8,16 +8,16 @@ router.route('/')
 router.route('/:state/capital')
     .get(statesController.getStateCapital)
 
-router.route('/states/:state/nickname')
+router.route('/:state/nickname')
     .get(statesController.getStateNickname)
 
-router.route('/states/:state/population')
+router.route('/:state/population')
     .get(statesController.getStatePopulation)
 
-router.route('/states/:state/admission')
+router.route('/:state/admission')
     .get(statesController.getStateAdmission)
 
-router.route('/states/:state/funfact')
+router.route('/:state/funfact')
     .get(statesController.getStateFunfact)
     .post(statesController.createNewState)
     .patch(statesController.updateState)
