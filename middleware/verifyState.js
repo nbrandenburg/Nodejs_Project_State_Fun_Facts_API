@@ -1,32 +1,28 @@
 // Verify the URL parameter :state matches one of the 50 possible state abbreviations. 
 
-const fsPromises = require('fs').promises;
-const path = require('path');
-const express = require('express');
+const fileData = require('../model/statesData.json');
 
 const verifyState = async (req, res, next) => {
+
     try {
-        // Retrieve data from the statesData.json file
-        const rawdata = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'statesData.json'), 'utf8');
-        
-        // Parse data
-        const data = JSON.parse(rawdata);
         
         // Create an array of state codes
         const stateCodeArray = [];
-        for (let i = 0; i < data.length; i++) {
-            stateCodeArray[i] = data[i].code;
-        }
+        fileData.forEach((state) => {
+            stateCodeArray.push(state.code);
+        })
 
         // Search stateCodeArray for received state parameter
         let stateParam = req.params.state;
-        stateParam = stateParam.toUpperCase();
-
+        stateParam = stateParam.toUpperCase();        
         const foundState = stateCodeArray.find((stateCode) => stateCode === stateParam);
+
+        // If found, attach the verified code to the request object
         if (foundState) {
-            // Attach the verified code to the request object
             req.code = foundState;
             next;
+        
+        // If not found, return an error message
         } else {
             res.json({"message": "No states found."});
         }
