@@ -67,34 +67,37 @@ const createNewState = async (req, res) => {
         return res.status(400).json({"message": "State fun facts value required"});
     }
 
+    // Make sure funfacts value is an array
+    const values = req.body.funfacts;
+
+    if (!(values instanceof Array)) {
+        return res.status(400).json({"message": "State fun facts value must be an array"});
+    }
+
     // Find state in database
     const state = await State.findOne({
         stateCode: req.code
     }).exec();
 
-    try {
+    // If the state doesn't exist in the database, create it
+    if (!state) {
+        const result = await State.create({
+            stateCode: req.code,
+            funfacts: req.body.funfacts
+        });
+   
+        res.status(201).json(result);
+    }
 
-        // If the state doesn't exist in the database, create it
-        if (!state) {
-            const result = await State.create({
-                stateCode: req.code,
-                funfacts: req.body.funfacts
-            });
-            result = await state.save();
-            res.status(201).json(result);
+    // If there are already funfacts for the state, merge them with the new funfacts
+    else {
+        const funfactsArray = state.funfacts;
+        if (funfactsArray.length !== 0) {
+            state.funfacts = [...funfactsArray];
         }
 
-        // If there are already funfacts for the state, merge them with the new funfacts
-        else {
-            state.funfacts.push(req.body.funfacts);
-
-            // Save to database
-            const result = await state.save();
-            res.status(201).json(result);
-        }
-
-    } catch (error) {
-        console.error(error);
+        const result = await state.save();
+        res.json(result);
     }
 }
 
