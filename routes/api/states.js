@@ -1,24 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const statesController = require('../../controllers/statesController');
+const verifyState = require ('../../middleware/verifyState');
 
-// GET
-router.route('/').get(statesController.getAllStates)
-router.route('/:state').get(statesController.getState)
-router.route('/:state/capital').get(statesController.getStateCapital)
-router.route('/:state/nickname').get(statesController.getStateNickname)
-router.route('/:state/population').get(statesController.getStatePopulation)
-router.route('/:state/admission').get(statesController.getStateAdmission)
-router.route('/:state/funfact').get(statesController.getRandomStateFunfact)
+// GET all states
+router.route('/').get(statesController.getAllStates);
 
-// POST
-router.route('/:state/funfact').post(statesController.createNewState)
+// GET single state - uses middleware
+router.route('/:state').get(verifyState, statesController.getState);
+router.route('/:state/capital').get(verifyState, statesController.getStateCapital);
+router.route('/:state/nickname').get(verifyState, statesController.getStateNickname);
+router.route('/:state/population').get(verifyState, statesController.getStatePopulation);
+router.route('/:state/admission').get(verifyState, statesController.getStateAdmission);
 
-// PATCH
-router.route('/:state/funfact').patch(statesController.updateState)
-
-// DELETE
-router.route('/:state/funfact').delete(statesController.deleteState)
+router.route('/:state/funfact')
+    .get(verifyState, statesController.getRandomStateFunfact)
+    .post(verifyState, statesController.createNewState)
+    .patch(verifyState, statesController.updateState)
+    .delete(verifyState, statesController.deleteState)
 
 // Catch all for routes that do not exist
 router.route('*', (req, res) => {

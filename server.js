@@ -3,34 +3,23 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
 const connectDB = require('./config/dbConn');
 const PORT = process.env.PORT || 3500;
 
 // Connect to MongoDB
 connectDB();
 
-// Cross Origin Resource Sharings
+// Cross Origin Resource Sharing
 app.use(cors());
 
-// allow options to pass preflight
-app.options("/*", (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    res.send(200);
-  });
- 
-// built-in middleware to handle urlencoded form data
-app.use(express.urlencoded({ extended: false }));
-
-// built-in middleware for json 
+// Built-in middleware for json 
 app.use(express.json());
 
-//serve static files
+// Serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));
 
-// routes
+// Routes
 app.use('/', require('./routes/root'));
 app.use('/states', require('./routes/api/states'));
 

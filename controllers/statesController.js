@@ -67,9 +67,6 @@ const createNewState = async (req, res) => {
         return res.status(400).json({"message": "State fun facts value required"});
     }
 
-    // Verify State and attach code to req
-    verifyState(req, res);
-
     // Find state in database
     const state = await State.findOne({
         stateCode: req.code
@@ -109,9 +106,6 @@ const updateState = async (req, res) => {
         return res.status(400).json({"message": "Fun facts and index required to update"});
     }
 
-    // Verify State and attach code to req
-    verifyState(req, res);
-
     // Find state in database
     const state = await State.findOne({
         stateCode: req.code
@@ -139,9 +133,7 @@ const deleteState = async (req, res) => {
     if (!req?.body?.index) {
         return res.status(400).json({"message": "Index required to delete"});
     }
-
-    // Verify State and attach code to req
-    verifyState(req, res);
+    const index = req.body.index;
 
     // Find state in database
     const state = await State.findOne({
@@ -150,13 +142,12 @@ const deleteState = async (req, res) => {
 
     try {
 
-        // Find the funfact to be deleted using the index 
-        const index = req.body.index;  
+        // Find the funfact to be deleted using the index   
         state.funfacts.splice((index - 1), 1);
 
         // Save to database
         result = await state.save();
-        res.status(201).json(result);
+        res.json(result);
 
     } catch (error) {
         console.error(error);
@@ -168,9 +159,6 @@ const getState = async (req, res) => {
 
     // Make sure state is provided
     if (!req?.params?.state) return res.status(400).json({'message': 'State required.'});
-
-    // Verify State
-    verifyState(req, res);
 
     // Retrieve data from file
     const fileStates = fileData;
@@ -206,9 +194,6 @@ const getState = async (req, res) => {
 // Capital
 const getStateCapital = async (req, res) => {
     
-    // Verify State and attach code to req
-    verifyState(req, res);
-
     // Find Parameter State in file data
     let paramState;   
     fileData.forEach((fileState) => {
@@ -228,9 +213,6 @@ const getStateCapital = async (req, res) => {
 // Nickname
 const getStateNickname = async (req, res) => {
 
-    // Verify State and attach code to req
-    verifyState(req, res);
-
     // Find Parameter State in file data
     let paramState;
     fileData.forEach((fileState) => {
@@ -249,9 +231,6 @@ const getStateNickname = async (req, res) => {
 
 // Population
 const getStatePopulation = async (req, res) => {
-
-    // Verify State and attach code to req
-    verifyState(req, res);
 
     // Find Parameter State in file data
     let paramState;    
@@ -275,9 +254,6 @@ const getStatePopulation = async (req, res) => {
 // Admission
 const getStateAdmission = async (req, res) => {
 
-    // Verify State and attach code to req
-    verifyState(req, res);
-
     // Find Parameter State in file data
     let paramState;    
     fileData.forEach((fileState) => {
@@ -296,9 +272,6 @@ const getStateAdmission = async (req, res) => {
 
 // Random Fun Fact
 const getRandomStateFunfact = async (req, res) => {
-
-    // Verify State and attach code to req
-    verifyState(req, res);
 
     // Retrieve data from MongoDB
     const databaseData = await State.find();
