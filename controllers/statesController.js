@@ -309,15 +309,36 @@ const getRandomStateFunfact = async (req, res) => {
         if (state.stateCode === req.code) {
             paramState = state;
         }
-    });
+    });    
 
-    // Store funfacts in an array
-    const funfactsArray = paramState.funfacts;
+    // If there are no funfacts, return a message
+    if (!paramState) {
+        let stateName;
+        fileData.forEach((state) => {
+            if (state.code == req.code) {
+                stateName = state.state;
+            }
+        });
 
-    // Choose a random funfact
-    const randomFact = funfactsArray[Math.floor(Math.random() * funfactsArray.length)];
+        const message = {
+            message: `No Fun Facts found for ${stateName}`
+        }
+        res.json(message);
+    }
 
-    res.json(randomFact);
+    // Otherwise, return a random funfact
+    else {
+        // Store funfacts in an array
+        const funfactsArray = paramState.funfacts;
+
+        const randomFact = funfactsArray[Math.floor(Math.random() * funfactsArray.length)];
+
+        // Create a funfact array
+        const result = {
+            funfact: randomFact
+        }    
+        res.json(result);    
+    }
 }
 
 module.exports = {

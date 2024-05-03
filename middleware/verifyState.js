@@ -24,7 +24,7 @@ const verifyState = async (req, res, next) => {
         
         // If not found, return an error message
         } else {
-            res.json({"message": "No states found."});
+            res.json({"message": "Invalid state abbreviation parameter"});
         }
 
     } catch (err) {
