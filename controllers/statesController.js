@@ -91,22 +91,23 @@ const createNewState = async (req, res) => {
 
     // If there are already funfacts for the state, merge them with the new funfacts
     else {
-        const funfactsArray = state.funfacts;
-        if (funfactsArray.length !== 0) {
-            state.funfacts = [...funfactsArray];
-        }
-
+        state.funfacts.push(...req.body.funfacts);
         const result = await state.save();
-        res.json(result);
+        res.status(201).json(result);
     }
 }
 
 // PATCH
 const updateState = async (req, res) => {
 
-    // Make sure funfacts and index were provided
-    if (!req?.body?.funfacts || !req?.body?.index) {
-        return res.status(400).json({"message": "Fun facts and index required to update"});
+    // Make sure index was provided
+    if (!req?.body?.index) {
+        return res.status(400).json({"message": "State fun fact index value required"});
+    }
+
+    // Make sure funfact was provided
+    if (!req?.body?.funfact) {
+        return res.status(400).json({"message": "State fun fact value required"});
     }
 
     // Find state in database
@@ -114,19 +115,32 @@ const updateState = async (req, res) => {
         stateCode: req.code
     }).exec();
 
-    try {
+    let stateName;
+    fileData.forEach((state) => {
+        if (state.code == req.code) {
+            stateName = state.state;
+        }
+    });
 
-        // Find the funfact to be updated using the index   
-        const index = req.body.index;
-        state.funfacts[index - 1] = req.body.funfacts;
-
-        // Save to database
-        result = await state.save();
-        res.status(201).json(result);
-
-    } catch (error) {
-        console.error(error);
+    // Make sure state has existing funfacts
+    if (!state) {        
+        return res.status(400).json({"message": `No Fun Facts found for ${stateName}`});
     }
+
+    // Set index of funfact to be updated  
+    const index = req.body.index;
+
+    // If there are no funfacts at that index, return a message
+    if (state.funfacts.length < (index - 1)) {
+        return res.status(400).json({"message": `No Fun Fact found at that index for ${stateName}`});
+    }
+
+    // Update the funfact
+    state.funfacts[index - 1] = req.body.funfact;
+
+    // Save to database
+    result = await state.save();
+    res.status(201).json(result);
 }
 
 // DELETE
@@ -134,27 +148,40 @@ const deleteState = async (req, res) => {
 
     // Make sure index was provided
     if (!req?.body?.index) {
-        return res.status(400).json({"message": "Index required to delete"});
+        return res.status(400).json({"message": "State fun fact index value required"});
     }
-    const index = req.body.index;
 
     // Find state in database
     const state = await State.findOne({
         stateCode: req.code
     }).exec();
 
-    try {
+    let stateName;
+    fileData.forEach((state) => {
+        if (state.code == req.code) {
+            stateName = state.state;
+        }
+    });
 
-        // Find the funfact to be deleted using the index   
-        state.funfacts.splice((index - 1), 1);
-
-        // Save to database
-        result = await state.save();
-        res.json(result);
-
-    } catch (error) {
-        console.error(error);
+    // Make sure state has existing funfacts
+    if (!state) {        
+        return res.status(400).json({"message": `No Fun Facts found for ${stateName}`});
     }
+
+    // Set index of funfact to be updated  
+    const index = req.body.index;
+
+    // If there are no funfacts at that index, return a message
+    if (state.funfacts.length < (index - 1)) {
+        return res.status(400).json({"message": `No Fun Fact found at that index for ${stateName}`});
+    }
+
+    // Find the funfact to be deleted using the index and remove it  
+    state.funfacts.splice((index - 1), 1);
+
+    // Save to database
+    result = await state.save();
+    res.json(result);
 }
 
 // GET single
