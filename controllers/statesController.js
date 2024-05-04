@@ -1,8 +1,5 @@
 const State = require('../model/State');
-const fsPromises = require('fs').promises;
-const path = require('path');
 const fileData = require('../model/statesData.json');
-const { verifyState } = require('../middleware/verifyState');
 
 // GET all
 const getAllStates = async (req, res) => {
