@@ -1,6 +1,8 @@
+*This project is no longer deployed.
+
 Author: Nicole Brandenburg
 
-Date: May 5, 2024
+Date Deployed: May 5, 2024
 
 Project Homepage: https://cake-tin-fascinator.glitch.me
 
